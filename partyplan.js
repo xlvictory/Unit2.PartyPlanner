@@ -32,7 +32,7 @@ function renderEvents() {
     const eventInfo = state.events.map((evnt) => {
         const li = document.createElement("li");
         li.innerHTML = `<h2>${evnt.name}</h2>
-     <p>${evnt.date}, ${evnt.location}</p>
+     <p>Date & Time: ${evnt.date}</p><p>Location: ${evnt.location}</p>
         <p>${evnt.description}</p>`;
         return li;
     });
