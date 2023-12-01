@@ -49,12 +49,7 @@ function renderEvents() {
 async function addEvent(event) {
     event.preventDefault();
     try { 
-        const addEventForm = document.querySelector("#addEvent");
-        console.log(addEventForm.name);
-        console.log(addEventForm.date);
-        console.log(addEventForm.location);
-        console.log(addEventForm.description);
-       
+        const addEventForm = document.querySelector("#addEvent");       
         const response = await fetch(API_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
