@@ -6,6 +6,8 @@ const state = {
 };
 
 const eventList = document.querySelector("#events");
+const addEventForm = document.querySelector("#addEvent");
+addEventForm.addEventListener("submit", addEvent);
 
 async function render() {
     await getEvents();
@@ -21,7 +23,7 @@ async function getEvents() {
         return json;
     } catch (error) {
         console.error(error);
-    }
+    };
 };
 
 function renderEvents() {
@@ -34,7 +36,45 @@ function renderEvents() {
         li.innerHTML = `<h2>${evnt.name}</h2>
      <p>Date & Time: ${evnt.date}</p><p>Location: ${evnt.location}</p>
         <p>${evnt.description}</p>`;
+
+const deleteButton = document.createElement("button");
+deleteButton.textContent = "Delete Event";
+li.append(deleteButton);
+deleteButton.addEventListener("click", () => deleteEvent(evnt.id))
+
         return li;
     });
     eventList.replaceChildren(...eventInfo);
 }
+
+async function addEvent(event) {
+    event.preventDefault();
+    try {
+        const response = await fetch(API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                name: addEventForm.name.value,
+                date: addEventForm.date.value,
+                location: addEventForm.location.value,
+                description: addEventForm.description.value,
+            })
+        }); console.log(response)
+        if (!response.ok) {
+            throw new Error("Couldn't create New Event");
+        } render();
+    } catch (error) {
+        console.error(error);
+    };
+};
+
+async function deleteEvent(id) {
+    try {
+      const response = await fetch(`${API_URL}/${id}`, {
+        method: "DELETE"
+      })
+      render();
+    } catch (error) {
+      console.error(error)
+    }
+  }
