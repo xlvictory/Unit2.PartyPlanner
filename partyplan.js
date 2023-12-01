@@ -6,8 +6,7 @@ const state = {
 };
 
 const eventList = document.querySelector("#events");
-const addEventForm = document.querySelector("#addEvent");
-addEventForm.addEventListener("submit", addEvent);
+
 
 async function render() {
     await getEvents();
@@ -37,10 +36,10 @@ function renderEvents() {
      <p>Date & Time: ${evnt.date}</p><p>Location: ${evnt.location}</p>
         <p>${evnt.description}</p>`;
 
-const deleteButton = document.createElement("button");
-deleteButton.textContent = "Delete Event";
-li.append(deleteButton);
-deleteButton.addEventListener("click", () => deleteEvent(evnt.id))
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete Event";
+        li.append(deleteButton);
+        deleteButton.addEventListener("click", () => deleteEvent(evnt.id))
 
         return li;
     });
@@ -49,7 +48,13 @@ deleteButton.addEventListener("click", () => deleteEvent(evnt.id))
 
 async function addEvent(event) {
     event.preventDefault();
-    try {
+    try { 
+        const addEventForm = document.querySelector("#addEvent");
+        console.log(addEventForm.name);
+        console.log(addEventForm.date);
+        console.log(addEventForm.location);
+        console.log(addEventForm.description);
+       
         const response = await fetch(API_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -59,7 +64,8 @@ async function addEvent(event) {
                 location: addEventForm.location.value,
                 description: addEventForm.description.value,
             })
-        }); console.log(response)
+        }); 
+        addEventForm.reset();
         if (!response.ok) {
             throw new Error("Couldn't create New Event");
         } render();
@@ -70,11 +76,17 @@ async function addEvent(event) {
 
 async function deleteEvent(id) {
     try {
-      const response = await fetch(`${API_URL}/${id}`, {
-        method: "DELETE"
-      })
-      render();
+        const response = await fetch(`${API_URL}/${id}`, {
+            method: "DELETE"
+        })
+        render();
     } catch (error) {
-      console.error(error)
+        console.error(error)
     }
-  }
+}
+
+window.addEventListener("load", () => {
+    render();
+    const addEventForm = document.querySelector("#addEvent");
+    addEventForm.addEventListener("submit", addEvent);
+});
